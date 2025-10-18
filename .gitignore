@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/**
+*.js.map
+dist/**/*.d.ts
+dist/**/*.d.ts.map
+
+# Keep config files
+!*.config.js
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# Screenshots cache
+screenshots/

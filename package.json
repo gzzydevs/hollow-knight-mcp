@@ -1,0 +1,36 @@
+{
+  "name": "hollow-knight-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Hollow Knight - provides tools to read save files and capture game screenshots",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "hollow-knight-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts"
+  },
+  "keywords": [
+    "mcp",
+    "hollow-knight",
+    "gaming",
+    "save-files",
+    "screenshots"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.1",
+    "crypto-js": "^4.2.0",
+    "screenshot-desktop": "^1.15.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^24.8.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
