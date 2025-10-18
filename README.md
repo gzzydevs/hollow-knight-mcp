@@ -154,6 +154,8 @@ Hollow Knight save files are JSON-based files that contain:
 
 The save reader parses this JSON and extracts meaningful statistics, presenting them in both structured and human-readable formats.
 
+**Credits:** The save file decoding implementation is based on the work by [ReznoR](https://github.com/ReznoRMichael) from the [hollow-knight-completion-check](https://github.com/ReznoRMichael/hollow-knight-completion-check) repository. ReznoR passed away in 2022, and we honor their contribution to the Hollow Knight community.
+
 ### Screenshot Technology
 
 Screenshots are captured using `screenshot-desktop`, which provides cross-platform screen capture capabilities. The screenshots are:

@@ -1,3 +1,12 @@
+/**
+ * Hollow Knight Save File Decoder
+ * 
+ * This implementation is based on the work by ReznoR from the repository:
+ * https://github.com/ReznoRMichael/hollow-knight-completion-check
+ * 
+ * ReznoR passed away in 2022. We honor their contribution to the Hollow Knight community.
+ */
+
 import { readFile } from "fs/promises";
 import { existsSync } from "fs";
 import { createRequire } from "module";
