@@ -2,8 +2,7 @@
 node_modules/
 
 # Build output
-dist/
-*.js
+dist/**
 *.js.map
 dist/**/*.d.ts
 dist/**/*.d.ts.map
@@ -20,7 +19,6 @@ npm-debug.log*
 Thumbs.db
 
 # IDE
-.vscode/
 .idea/
 *.swp
 *.swo

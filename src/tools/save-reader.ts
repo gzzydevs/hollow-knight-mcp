@@ -1,101 +1,43 @@
-import { readFile } from "fs/promises";
 import { existsSync } from "fs";
-
-/**
- * Hollow Knight save file structure
- * The save files are JSON-based but may contain additional metadata
- */
-export interface HollowKnightSaveData {
-  // Player stats
-  health?: number;
-  maxHealth?: number;
-  maxHealthBase?: number;
-  geo?: number;
-  
-  // Progress
-  playTime?: number;
-  completionPercentage?: number;
-  permadeathMode?: number;
-  
-  // Location
-  playerData?: {
-    health?: number;
-    maxHealth?: number;
-    geo?: number;
-    permadeathMode?: number;
-    dreamOrbs?: number;
-  };
-  
-  // Abilities and items
-  hasMap?: boolean;
-  hasQuill?: boolean;
-  hasDash?: boolean;
-  hasWallJump?: boolean;
-  hasDoubleJump?: boolean;
-  hasSuperDash?: boolean;
-  hasDreamNail?: boolean;
-  hasKingsBrand?: boolean;
-  hasShadowDash?: boolean;
-  hasAcidArmour?: boolean;
-  
-  // Charms
-  charms?: number;
-  charmsOwned?: number;
-  
-  // Skills
-  fireballLevel?: number;
-  quakeLevel?: number;
-  screamLevel?: number;
-  
-  // Completion tracking
-  killedBigFly?: boolean;
-  killedBigBee?: boolean;
-  killedMageLord?: boolean;
-  killedBlackKnight?: boolean;
-  
-  // Raw data for anything we didn't parse
-  [key: string]: any;
-}
+import { decodeHollowKnightSave } from "./save-file-decoder.js";
 
 /**
  * Parse Hollow Knight save file and extract statistics
  */
 export async function readSaveFile(filePath: string): Promise<{
   success: boolean;
-  data?: HollowKnightSaveData;
+  data?: any;
   summary?: string;
   error?: string;
 }> {
   try {
     // Check if file exists
+    console.error(`[DEBUG] Checking if file exists: ${filePath}`);
     if (!existsSync(filePath)) {
+      const errorMsg = `❌ ARCHIVO NO ENCONTRADO: ${filePath}\n\n` +
+               `Ubicaciones comunes:\n` +
+               `  Windows: %USERPROFILE%\\AppData\\LocalLow\\Team Cherry\\Hollow Knight\\\n` +
+               `  Linux: ~/.config/unity3d/Team Cherry/Hollow Knight/\n` +
+               `  macOS: ~/Library/Application Support/unity.Team Cherry.Hollow Knight/\n\n` +
+               `Los archivos se llaman: user1.dat, user2.dat, user3.dat, o user4.dat`;
+      console.error(errorMsg);
       return {
         success: false,
-        error: `Save file not found: ${filePath}. Common locations:\n` +
-               `Windows: %USERPROFILE%\\AppData\\LocalLow\\Team Cherry\\Hollow Knight\\\n` +
-               `Linux: ~/.config/unity3d/Team Cherry/Hollow Knight/\n` +
-               `macOS: ~/Library/Application Support/unity.Team Cherry.Hollow Knight/`,
+        error: errorMsg,
       };
     }
 
-    // Read the file
-    const fileContent = await readFile(filePath, "utf-8");
+    console.error(`[DEBUG] ✓ Archivo encontrado, decodificando...`);
     
-    // Try to parse as JSON
-    let saveData: any;
-    try {
-      saveData = JSON.parse(fileContent);
-    } catch (parseError) {
-      // If JSON parsing fails, the file might be encrypted or in a different format
-      // Hollow Knight save files are actually JSON, but might have different structure
-      return {
-        success: false,
-        error: "Unable to parse save file. The file may be corrupted or in an unexpected format.",
-      };
-    }
+    // Decode the save file using the decoder
+    const saveData = await decodeHollowKnightSave(filePath);
+    console.error(`[DEBUG] ✓ Save decodificado exitosamente`);
+    console.error(`[DEBUG] Claves principales: ${Object.keys(saveData).slice(0, 10).join(', ')}`);
 
     // Extract key statistics
+    console.error(`[DEBUG] Generando resumen...`);
     const summary = generateSummary(saveData);
+    console.error(`[DEBUG] ✓ Resumen generado exitosamente`);
 
     return {
       success: true,
@@ -103,9 +45,11 @@ export async function readSaveFile(filePath: string): Promise<{
       summary,
     };
   } catch (error) {
+    const errorMsg = `❌ ERROR INESPERADO:\n  ${error instanceof Error ? error.message : String(error)}\n  Stack: ${error instanceof Error ? error.stack : 'N/A'}`;
+    console.error(errorMsg);
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: errorMsg,
     };
   }
 }
